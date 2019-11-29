@@ -24,20 +24,27 @@ namespace Manejador_BD_JTM
         char tipoDatoAgregar;
         private string rutaSelected;
         DataTable TablaDeAtributos;
+        DataTable TablaDeRegistros;
+
         ImageList myImageList = new ImageList();
         FileInfo Archivo_DD_atributos;
         List<Atributo> Lista_Atributos_Actual = new List<Atributo>();
         string nombreTabla = string.Empty;
         FileInfo ArchivoTabla;
-        long DirSigA, pos, Direccion_Atributo;
+        long  pos, Direccion_Atributo;
+        int longitudDato;
+        Tabla tablaActual = new Tabla();//tabla para la base de datos actual
+        BaseDatos baseD_actua = new BaseDatos();//base de datos actual
         public Form1()
         {
 
             InitializeComponent();
             inicializa();
             TablaDeAtributos = new DataTable("Atributos");
+            TablaDeRegistros = new DataTable("Registros");
             creaColumnas();
             dgv_Atributos.DataSource = TablaDeAtributos;
+            dgvRegistros.DataSource = TablaDeRegistros;
         }
         //
         private void inicializa()
@@ -61,7 +68,7 @@ namespace Manejador_BD_JTM
             }
             foreach (var item in directoryInfo.GetFiles())
             {
-                treeNode.ImageIndex = 0;
+                treeNode.ImageIndex = 1;
                 // item.
                 treeNode.Nodes.Add(new TreeNode(item.Name));
             }
@@ -183,7 +190,7 @@ namespace Manejador_BD_JTM
                     File.Delete(nombreFuturo);
 
                 // Move the file.--renombrar si necesidad de dar la extencion
-                File.Move(nombrePasado, nombreFuturo + ".dat");
+                File.Move(nombrePasado, nombreFuturo + ".bin");
                 if (File.Exists(nombrePasado))
                 {
                     MessageBox.Show("Archivo original existe aún");
@@ -225,6 +232,7 @@ namespace Manejador_BD_JTM
         }
         private void TvCarpetasArchivos_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            TablaDeRegistros.Clear();
             TablaDeAtributos.Clear();
             string diagona = @"\";
             string rutaSelected = @rutaRaiz + diagona/*+ e.Node.Text*/;
@@ -329,8 +337,9 @@ namespace Manejador_BD_JTM
             char tipo;
             using (BinaryReader r = new BinaryReader(File.Open(ArchivoTabla.FullName, FileMode.Open)))//para leer
             {
+                Lista_Atributos_Actual.Clear();
                 int tamanioArchivo = (int)r.BaseStream.Length;
-                if (tamanioArchivo > 0)
+                if (tamanioArchivo > 8)
                 {
                     
 
@@ -369,6 +378,14 @@ namespace Manejador_BD_JTM
                         
                         auxAtributo.DireccionSigAtributo = dir_siguienteAtributo;
                         
+                        if(auxAtributo.tipoDeDato=='E')
+                        TablaDeRegistros.Columns.Add(auxAtributo.nombeAtributo_String, System.Type.GetType("System.Int32"));
+                        else if  (auxAtributo.tipoDeDato == 'F')
+                            TablaDeRegistros.Columns.Add(auxAtributo.nombeAtributo_String);
+                        else
+                            TablaDeRegistros.Columns.Add(auxAtributo.nombeAtributo_String, System.Type.GetType("System.String"));
+
+
                         Lista_Atributos_Actual.Add(auxAtributo);
                     }
                     r.Close();
@@ -376,7 +393,18 @@ namespace Manejador_BD_JTM
                     }
                 else
                 {
-                    MessageBox.Show("Tabla vacia");
+                    if (tamanioArchivo == 0)
+                    {
+                        r.Close();
+                        MessageBox.Show("Tabla vacia");
+                        inicializaTabla();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Tabla vacia");
+
+                    }
+
                 }
             }
         }
@@ -390,16 +418,21 @@ namespace Manejador_BD_JTM
             atributoAux.nombeAtributo_String = tbNombreAtributo.Text;
             atributoAux.nombre_ArchivoLlaveForaneaString = rutaSelectedRespArchivo;
             atributoAux.nombre_Atributo = nombre_Atributos_Char;
+            atributoAux.longitudDato =Convert.ToInt32( tbTamanio.Text);
+
             if (cbTipoDatoAtributo.Text == "Entero")
             {
                 atributoAux.tipoDeDato = 'E';
-                atributoAux.longitudDato = 4;
 
             }
-            else
+            else if(cbTipoDatoAtributo.Text == "Flotante")
+            {
+                atributoAux.tipoDeDato = 'F';
+
+            }
+            else  
             {
                 atributoAux.tipoDeDato = 'C';
-                atributoAux.longitudDato = 100;
 
             }
             if (cbTipoDeLlave.Text == "Ninguna")
@@ -424,11 +457,14 @@ namespace Manejador_BD_JTM
         {
             if (cbTipoDeLlave.Text == "Foranea")
             {
+              //  foreach()
                 foreach (String  TablaAgregar in Directory.GetFiles(rutaSelectedResp))
                 {
                     cbTablaDeLlaveForanea.Items.Add(TablaAgregar);
                 }
+
             }
+
         }
 
         private void CbTipoDatoAtributo_SelectedIndexChanged(object sender, EventArgs e)
@@ -443,9 +479,15 @@ namespace Manejador_BD_JTM
 
         private void Dgv_Atributos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-             nombreAtributoAeditar = (string)dgv_Atributos.CurrentCell.Value;
-            EditarAtributo(nombreAtributoAeditar);
-
+            try
+            {
+                nombreAtributoAeditar = (string)dgv_Atributos.CurrentCell.Value;
+                EditarAtributo(nombreAtributoAeditar);
+            }
+            catch (InvalidCastException a)
+            {
+                
+            }
         }
         private void EditarAtributo(string nombre_A_Editar)
         {
@@ -456,8 +498,10 @@ namespace Manejador_BD_JTM
                     tbNombreAtributo.Text = nombre_A_Editar;
                     if (a1.tipoDeDato == 'E')
                         cbTipoDatoAtributo.SelectedIndex=0;
-                    else
+                    else if (a1.tipoDeDato == 'C')
                         cbTipoDatoAtributo.SelectedIndex = 1;
+                    else
+                        cbTipoDatoAtributo.SelectedIndex = 2;
 
                     if (a1.tipocve == 0)
                     {
@@ -471,12 +515,19 @@ namespace Manejador_BD_JTM
                     {
                         cbTipoDeLlave.SelectedIndex = 2;
                     }
+                    tbTamanio.Text =Convert.ToString( a1.longitudDato);
                 }
             }
         }
-
+        private void limpiezaEdicion()
+        {
+            tbNombreAtributo.Clear();
+            tbTamanio.Clear();
+            
+        }
         private void BtEditarAtributo_Click(object sender, EventArgs e)
         {
+
             using (BinaryWriter writer = new BinaryWriter(ArchivoTabla.Open(FileMode.Open, FileAccess.Write)))
             {
                 foreach (Atributo a1 in Lista_Atributos_Actual)
@@ -488,15 +539,20 @@ namespace Manejador_BD_JTM
                         if (cbTipoDatoAtributo.Text == "Entero")
                         {
                             a1.tipoDeDato = 'E';
-                            a1.longitudDato = 8;
+                           
+
+                        }
+                        else if (cbTipoDatoAtributo.Text !="Flotante")
+                        {
+                            a1.tipoDeDato = 'C';
 
                         }
                         else
                         {
-                            a1.tipoDeDato = 'C';
-                            a1.longitudDato = 100;
+                            a1.tipoDeDato = 'F';
 
                         }
+                       longitudDato =Convert.ToInt32( tbTamanio.Text);
                         if (cbTipoDeLlave.Text == "Ninguna")
                         {
                             a1.tipocve = 0;
@@ -519,13 +575,14 @@ namespace Manejador_BD_JTM
                         writer.Write(a1.tipocve);//4
                         writer.Write(a1.DireccionAtributo); //8
                         writer.Write(pos); //direccin del siguiente indice
-                    
+                        MessageBox.Show("Atributo editado");
                         llenaTabla();
                     }
-                    writer.Close();
                 }
+                writer.Close();
+
             }
-         }
+        }
 
         private void Button1_Click_1(object sender, EventArgs e)
         {
@@ -543,6 +600,28 @@ namespace Manejador_BD_JTM
 
             return auxChar;
         }
+        private void inicializaTabla()//función para inicializar el archivo
+        {
+            using (BinaryWriter writer = new BinaryWriter(ArchivoTabla.Open(FileMode.Open, FileAccess.Write)))
+            {
+                pos = writer.BaseStream.Length;
+                if (pos < 0)
+                {
+                    long cabecera = -1;
+                    writer.BaseStream.Seek(0, SeekOrigin.Begin);
+                    writer.Write(cabecera);
+                    writer.Close();
+                    MessageBox.Show("se inicializo la tabla");
+                }
+                else
+                {
+                     //aqu[i se cambia la cabecera a la dirección del primer registro
+
+                }
+            }
+
+
+        }
         private void BtAgregarAtritbuto_Click(object sender, EventArgs e)
         {
             Atributo atriGrab = new Atributo();
@@ -551,29 +630,31 @@ namespace Manejador_BD_JTM
             using (BinaryWriter writer = new BinaryWriter(ArchivoTabla.Open(FileMode.Open, FileAccess.Write)))
             {
                 pos = writer.BaseStream.Length;
-                writer.BaseStream.Seek(pos, SeekOrigin.Begin);
+               
                
                 //me muevo a la ubicaci[on a grabar
                 if (Lista_Atributos_Actual.Count() == 0)
                 {
-                    DirSigA = -1;
+                   
                 }
                 else//de regrabar la direcci[on del siguiente atributo para poner su direccion siguiente diferente a -1
                 {
-
+                    long pos1 = writer.BaseStream.Length;
+                    writer.BaseStream.Seek(pos1-8, SeekOrigin.Begin);
 
                     Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].DireccionSigAtributo = pos;
-                    DirSigA = -1;
-                    writer.BaseStream.Seek(Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].DireccionAtributo, SeekOrigin.Begin);
+                   
+                   /* writer.BaseStream.Seek(Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].DireccionAtributo, SeekOrigin.Begin);
                     writer.Write(Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].nombre_Atributo);//35
                     writer.Write(Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].nombre_ArchivoLlaveForanea);//35
                     writer.Write(Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].tipoDeDato);//1
                     writer.Write(Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].longitudDato);//4
                     writer.Write(Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].tipocve);//4
-                    writer.Write(Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].DireccionAtributo); //8
+                    writer.Write(Lista_Atributos_Actual[Lista_Atributos_Actual.Count - 1].DireccionAtributo); //8*/
                     writer.Write(pos); //direccin del siguiente indice
 
                 }
+                writer.BaseStream.Seek(pos, SeekOrigin.Begin);
                 atriGrab.DireccionAtributo = writer.BaseStream.Length;
                 writer.BaseStream.Seek(pos, SeekOrigin.Begin);
                 writer.Write(atriGrab.nombre_Atributo);//35

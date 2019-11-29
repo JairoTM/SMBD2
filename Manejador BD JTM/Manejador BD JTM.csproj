@@ -47,12 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Atributo.cs" />
-    <Compile Include="Atributos.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Atributos.Designer.cs">
-      <DependentUpon>Atributos.cs</DependentUpon>
-    </Compile>
+    <Compile Include="BaseDatos.cs" />
     <Compile Include="cambiarNombre.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,9 +63,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Atributos.resx">
-      <DependentUpon>Atributos.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="Tabla.cs" />
     <EmbeddedResource Include="cambiarNombre.resx">
       <DependentUpon>cambiarNombre.cs</DependentUpon>
     </EmbeddedResource>

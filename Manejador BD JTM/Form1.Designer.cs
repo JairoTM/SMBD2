@@ -30,6 +30,8 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tvCarpetasArchivos = new System.Windows.Forms.TreeView();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.bttCreaTabla = new System.Windows.Forms.Button();
@@ -47,23 +49,26 @@
             this.tbNombreAtributo = new System.Windows.Forms.TextBox();
             this.cbTipoDeLlave = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.tbTamanio = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.cbLlaveForanea = new System.Windows.Forms.ComboBox();
             this.cbTablaDeLlaveForanea = new System.Windows.Forms.ComboBox();
             this.lbTablaSelec = new System.Windows.Forms.Label();
-            this.dgv_Atributos = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
             this.btEditarAtributo = new System.Windows.Forms.Button();
+            this.dgv_Atributos = new System.Windows.Forms.DataGridView();
+            this.dgvRegistros = new System.Windows.Forms.DataGridView();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Atributos)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRegistros)).BeginInit();
             this.SuspendLayout();
             // 
             // tvCarpetasArchivos
             // 
             this.tvCarpetasArchivos.Location = new System.Drawing.Point(12, 45);
             this.tvCarpetasArchivos.Name = "tvCarpetasArchivos";
-            this.tvCarpetasArchivos.Size = new System.Drawing.Size(166, 496);
+            this.tvCarpetasArchivos.Size = new System.Drawing.Size(166, 451);
             this.tvCarpetasArchivos.TabIndex = 0;
             this.tvCarpetasArchivos.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.TvCarpetasArchivos_NodeMouseHover);
             this.tvCarpetasArchivos.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TvCarpetasArchivos_NodeMouseClick);
@@ -160,7 +165,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 90);
+            this.label2.Location = new System.Drawing.Point(6, 115);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 15;
@@ -177,7 +182,7 @@
             // 
             // btAgregarAtritbuto
             // 
-            this.btAgregarAtritbuto.Location = new System.Drawing.Point(95, 117);
+            this.btAgregarAtritbuto.Location = new System.Drawing.Point(286, 201);
             this.btAgregarAtritbuto.Name = "btAgregarAtritbuto";
             this.btAgregarAtritbuto.Size = new System.Drawing.Size(75, 23);
             this.btAgregarAtritbuto.TabIndex = 13;
@@ -199,7 +204,7 @@
             "Ninguna",
             "Primaria",
             "Secundaria"});
-            this.cbTipoDeLlave.Location = new System.Drawing.Point(95, 90);
+            this.cbTipoDeLlave.Location = new System.Drawing.Point(95, 115);
             this.cbTipoDeLlave.Name = "cbTipoDeLlave";
             this.cbTipoDeLlave.Size = new System.Drawing.Size(121, 21);
             this.cbTipoDeLlave.TabIndex = 11;
@@ -208,8 +213,9 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panel1.Controls.Add(this.tbTamanio);
+            this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.cbLlaveForanea);
             this.panel1.Controls.Add(this.cbTablaDeLlaveForanea);
             this.panel1.Controls.Add(this.lbTablaSelec);
             this.panel1.Controls.Add(this.label4);
@@ -221,8 +227,24 @@
             this.panel1.Controls.Add(this.cbTipoDeLlave);
             this.panel1.Location = new System.Drawing.Point(275, 45);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(262, 227);
+            this.panel1.Size = new System.Drawing.Size(364, 227);
             this.panel1.TabIndex = 22;
+            // 
+            // tbTamanio
+            // 
+            this.tbTamanio.Location = new System.Drawing.Point(95, 90);
+            this.tbTamanio.Name = "tbTamanio";
+            this.tbTamanio.Size = new System.Drawing.Size(100, 20);
+            this.tbTamanio.TabIndex = 25;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 90);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(87, 13);
+            this.label5.TabIndex = 24;
+            this.label5.Text = "Tamaño del dato";
             // 
             // label3
             // 
@@ -232,18 +254,6 @@
             this.label3.Size = new System.Drawing.Size(128, 13);
             this.label3.TabIndex = 22;
             this.label3.Text = "Tabla para llave foranea: ";
-            // 
-            // cbLlaveForanea
-            // 
-            this.cbLlaveForanea.FormattingEnabled = true;
-            this.cbLlaveForanea.Items.AddRange(new object[] {
-            "Ninguna",
-            "Primaria",
-            "Secundaria"});
-            this.cbLlaveForanea.Location = new System.Drawing.Point(95, 191);
-            this.cbLlaveForanea.Name = "cbLlaveForanea";
-            this.cbLlaveForanea.Size = new System.Drawing.Size(121, 21);
-            this.cbLlaveForanea.TabIndex = 21;
             // 
             // cbTablaDeLlaveForanea
             // 
@@ -266,6 +276,26 @@
             this.lbTablaSelec.TabIndex = 19;
             this.lbTablaSelec.Text = "Tabla seleccionada: ";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(184, 103);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 36);
+            this.button1.TabIndex = 24;
+            this.button1.Text = "Elimina Tabla";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click_1);
+            // 
+            // btEditarAtributo
+            // 
+            this.btEditarAtributo.Location = new System.Drawing.Point(184, 145);
+            this.btEditarAtributo.Name = "btEditarAtributo";
+            this.btEditarAtributo.Size = new System.Drawing.Size(75, 23);
+            this.btEditarAtributo.TabIndex = 23;
+            this.btEditarAtributo.Text = "Editar";
+            this.btEditarAtributo.UseVisualStyleBackColor = true;
+            this.btEditarAtributo.Click += new System.EventHandler(this.BtEditarAtributo_Click);
+            // 
             // dgv_Atributos
             // 
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -285,38 +315,43 @@
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgv_Atributos.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dgv_Atributos.Location = new System.Drawing.Point(275, 278);
+            this.dgv_Atributos.Location = new System.Drawing.Point(184, 278);
             this.dgv_Atributos.Name = "dgv_Atributos";
-            this.dgv_Atributos.Size = new System.Drawing.Size(592, 263);
+            this.dgv_Atributos.Size = new System.Drawing.Size(695, 218);
             this.dgv_Atributos.TabIndex = 23;
             this.dgv_Atributos.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Atributos_CellClick);
             this.dgv_Atributos.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Atributos_CellEnter);
             // 
-            // button1
+            // dgvRegistros
             // 
-            this.button1.Location = new System.Drawing.Point(184, 103);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 36);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "Elimina Tabla";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click_1);
-            // 
-            // btEditarAtributo
-            // 
-            this.btEditarAtributo.Location = new System.Drawing.Point(543, 162);
-            this.btEditarAtributo.Name = "btEditarAtributo";
-            this.btEditarAtributo.Size = new System.Drawing.Size(75, 23);
-            this.btEditarAtributo.TabIndex = 23;
-            this.btEditarAtributo.Text = "Editar";
-            this.btEditarAtributo.UseVisualStyleBackColor = true;
-            this.btEditarAtributo.Click += new System.EventHandler(this.BtEditarAtributo_Click);
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvRegistros.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.dgvRegistros.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvRegistros.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dgvRegistros.Location = new System.Drawing.Point(12, 502);
+            this.dgvRegistros.Name = "dgvRegistros";
+            this.dgvRegistros.Size = new System.Drawing.Size(867, 197);
+            this.dgvRegistros.TabIndex = 25;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(891, 553);
+            this.ClientSize = new System.Drawing.Size(891, 705);
+            this.Controls.Add(this.dgvRegistros);
             this.Controls.Add(this.btEditarAtributo);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dgv_Atributos);
@@ -327,13 +362,14 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "SMBD- Sistema Manejador de Bases de Datos";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Atributos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRegistros)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -358,13 +394,15 @@
         private System.Windows.Forms.TextBox tbNombreAtributo;
         private System.Windows.Forms.ComboBox cbTipoDeLlave;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.DataGridView dgv_Atributos;
         private System.Windows.Forms.Label lbTablaSelec;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox cbLlaveForanea;
         private System.Windows.Forms.ComboBox cbTablaDeLlaveForanea;
         private System.Windows.Forms.Button btEditarAtributo;
+        private System.Windows.Forms.TextBox tbTamanio;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridView dgv_Atributos;
+        private System.Windows.Forms.DataGridView dgvRegistros;
     }
 }
 
